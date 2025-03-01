@@ -27,7 +27,7 @@ func NewMongoDB(uri, dbName string) (*MongoDB, error) {
 		return nil, fmt.Errorf("MongoDB URI or Database name is empty")
 	}
 
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
 
 	clientOptions := options.Client().ApplyURI(uri)
@@ -36,6 +36,7 @@ func NewMongoDB(uri, dbName string) (*MongoDB, error) {
 		return nil, fmt.Errorf("MongoDB connection error: %w", err)
 	}
 
+	log.Println("🔌 Connecting to MongoDB...")
 	// Ping the database to check if the connection is alive
 	err = client.Ping(ctx, nil)
 	if err != nil {
