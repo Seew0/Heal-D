@@ -13,8 +13,6 @@ import (
 type MongoDB struct {
 	Client           *mongo.Client
 	Database         *mongo.Database
-	RealDataCol      *mongo.Collection
-	GeneratedDataCol *mongo.Collection
 	UserDataCol      *mongo.Collection
 	ForumCol         *mongo.Collection
 	MessageCol       *mongo.Collection
@@ -49,8 +47,6 @@ func NewMongoDB(uri, dbName string) (*MongoDB, error) {
 	return &MongoDB{
 		Client:           client,
 		Database:         db,
-		RealDataCol:      db.Collection("realData"),
-		GeneratedDataCol: db.Collection("generatedData"),
 		UserDataCol:      db.Collection("userData"),
 		ForumCol:         db.Collection("forums"),
 		MessageCol:       db.Collection("messages"),

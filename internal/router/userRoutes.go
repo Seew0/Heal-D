@@ -8,6 +8,8 @@ import (
 func SetupUserRoutes(r *gin.Engine, userLogic *logic.UserLogic) {
 	userGroup := r.Group("/users")
 	{
-		userGroup.GET("/", userLogic.GetUsers)
+		userGroup.GET("/createGenUser", userLogic.CreateUser)
+		userGroup.GET("/getUserById/:id",userLogic.GetUserByID)
+		userGroup.GET("/getAllUsers", userLogic.GetUsers)
 	}
 }

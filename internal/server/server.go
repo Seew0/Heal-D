@@ -12,7 +12,7 @@ type Server struct {
 }
 
 // NewServer initializes a new server with the router
-func NewServer(r *router.Router) *Server {
+func NewGinServer(r *router.Router) *Server {
 	ginRouter := gin.Default()
 
 	// Setup all routes

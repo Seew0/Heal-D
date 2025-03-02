@@ -28,7 +28,6 @@ func main() {
 		log.Fatalf("Failed to initialize app: %v", err)
 	}
 
-
-	server := server.NewServer(router)
+	server := server.NewGinServer(router)
 	server.Start(port)
 }

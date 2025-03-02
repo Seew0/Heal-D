@@ -3,6 +3,7 @@ module github.com/Seew0/Heal-D
 go 1.21.5
 
 require (
+	github.com/brianvoe/gofakeit/v6 v6.28.0
 	github.com/gin-gonic/gin v1.10.0
 	github.com/google/wire v0.6.0
 	github.com/joho/godotenv v1.5.1

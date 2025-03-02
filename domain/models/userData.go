@@ -32,12 +32,19 @@ type GeneratedData struct {
 	GenedLocation string             `bson:"genedLocation" validate:"required,min=3,max=50"`
 }
 
+type AccountStatus string
+
+const (
+	AccountStatusActive AccountStatus = "active"
+	AccountStatusBanned AccountStatus = "banned"
+)
+
 type UserData struct {
 	ID            primitive.ObjectID     `bson:"_id,omitempty"`
 	GeneratedData GeneratedData          `bson:"generatedData" validate:"required"`
 	CreatedAt     time.Time              `bson:"createdAt"`
 	LastActiveAt  time.Time              `bson:"lastActiveAt"`
-	AccountStatus string                 `bson:"accountStatus" validate:"oneof=active banned"`
+	AccountStatus AccountStatus          `bson:"accountStatus" validate:"oneof=active banned"`
 	Score         float32                `bson:"score" validate:"required,min=0,max=10"`
 	Preferences   map[string]interface{} `bson:"preferences"`
 }

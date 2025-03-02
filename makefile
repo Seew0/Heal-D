@@ -1,15 +1,14 @@
 # Go parameters
 BINARY_NAME=heal-d
 
+startdb:
+	@echo "Starting DB Instance...."
+	docker compose up -d
+	@echo "DB Instance Started...."
 
 run: 
 	@echo "Running the application..."
 	go run internal/cmd/main.go
-
-# Development mode (live reload)
-dev:
-	@echo "Running in development mode..."
-	air 
 
 # Production mode
 prod: build
@@ -26,15 +25,6 @@ wire:
 	@echo "Generating Wire dependencies..."
 	wire
 
-# Start MongoDB (Docker)
-start-db:
-	@echo "Starting MongoDB..."
-	docker run --rm -d \
-		--name mongo \
-		-p 27017:27017 \
-		-e MONGO_INITDB_DATABASE=$(DBNAME) \
-		mongo:latest
-
 # Clean build files
 clean:
 	@echo "Cleaning up..."
@@ -44,5 +34,3 @@ clean:
 test:
 	@echo "Running tests..."
 	go test ./...
-
-.PHONY: dev prod build wire start-db clean test
