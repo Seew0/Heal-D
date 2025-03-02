@@ -1,3 +1,3 @@
 # HealD
 
-get it running a-hole
+finish it quick bro
