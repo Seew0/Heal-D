@@ -17,6 +17,9 @@ type MongoDB struct {
 	ForumCol         *mongo.Collection
 	MessageCol       *mongo.Collection
 	ScoreMatchCol    *mongo.Collection
+	QuestionsCol     *mongo.Collection
+	UserAnswersCol   *mongo.Collection
+	ScoreUserCol     *mongo.Collection
 }
 
 // NewMongoDB initializes a MongoDB connection.
@@ -51,6 +54,9 @@ func NewMongoDB(uri, dbName string) (*MongoDB, error) {
 		ForumCol:         db.Collection("forums"),
 		MessageCol:       db.Collection("messages"),
 		ScoreMatchCol:    db.Collection("scoreMatches"),
+		QuestionsCol:    db.Collection("questions"),
+		UserAnswersCol:   db.Collection("userAnswers"),
+		ScoreUserCol:     db.Collection("scoreUser"),
 	}, nil
 }
 

@@ -45,6 +45,8 @@ type UserData struct {
 	CreatedAt     time.Time              `bson:"createdAt"`
 	LastActiveAt  time.Time              `bson:"lastActiveAt"`
 	AccountStatus AccountStatus          `bson:"accountStatus" validate:"oneof=active banned"`
-	Score         float32                `bson:"score" validate:"required,min=0,max=10"`
+	RealData      RealData               `bson:"realData" validate:"required"`
+	TestTaken     bool                   `bson:"testTaken"`
+	ScoreID       primitive.ObjectID     `bson:"scoreID,omitempty"` // Reference to Score
 	Preferences   map[string]interface{} `bson:"preferences"`
 }

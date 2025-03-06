@@ -1,10 +1,13 @@
 package repository
 
 type Repository struct {
-	UserRepository *UserRepository
-	// add more
+	UserRepository          *UserRepository
+	QuestionnaireRepository *QuestionnaireRepository
 }
 
-func NewRepository(userRepo *UserRepository) *Repository {
-	return &Repository{UserRepository: userRepo}
+func NewRepository(userRepo *UserRepository, questionnaireRepo *QuestionnaireRepository) *Repository {
+	return &Repository{
+		UserRepository: userRepo,
+		QuestionnaireRepository: questionnaireRepo,
+	}
 }

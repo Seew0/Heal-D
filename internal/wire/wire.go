@@ -24,9 +24,7 @@ func ProvideDB() (*db.MongoDB, error) {
 func ProvideRepositories(db *db.MongoDB) *repository.Repository {
 	return repository.NewRepository(
 		repository.NewUserRepository(db),
-		// repository.NewForumRepository(db),
-		// repository.NewMessageRepository(db),
-		// repository.NewScoreMatchRepository(db),
+		repository.NewQuestionnaireRepository(db),
 	)
 }
 

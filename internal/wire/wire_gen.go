@@ -40,7 +40,7 @@ func ProvideDB() (*db.MongoDB, error) {
 
 // ProvideRepositories sets up all repositories.
 func ProvideRepositories(db2 *db.MongoDB) *repository.Repository {
-	return repository.NewRepository(repository.NewUserRepository(db2))
+	return repository.NewRepository(repository.NewUserRepository(db2), repository.NewQuestionnaireRepository(db2))
 }
 
 // ProvideServices sets up all services.
