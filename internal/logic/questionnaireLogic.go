@@ -1,6 +1,7 @@
 package logic
 
 import (
+	"fmt"
 	"net/http"
 
 	requests "github.com/Seew0/Heal-D/domain/api"
@@ -40,27 +41,47 @@ func (l *QuestionnaireLogic) SubmitAnswers(c *gin.Context) {
 	// Calculate total score
 	var totalScore float32
 	for _, answer := range answers {
+		fmt.Println(answer.QuestionID.Hex())
 		question, err := l.questionnaireService.GetQuestionByID(c, answer.QuestionID.Hex())
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to fetch question"})
 			return
 		}
-
-		totalScore += question.Options[answer.Selected].Value
+		answer.UserID, err = primitive.ObjectIDFromHex(answersReq.UserID)
+		if err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid user ID"})
+			return
+		}
+		totalScore += question.Options[answer.Selected-1].Score
 	}
 
-	totalScore = totalScore / 10
-
+	totalScore = totalScore/10
+	fmt.Println("Total Score: ", totalScore)
 	// Updating answers in DB
+	var userAnswersData []models.UserAnswer
+	for _, answer := range answers {
+		answerUserID, err := primitive.ObjectIDFromHex(answersReq.UserID)
 
-	err := l.questionnaireService.SubmitAnswers(c, answers)
+		userAnswersData = append(userAnswersData, models.UserAnswer{
+			UserID:     answerUserID,
+			QuestionID: answer.QuestionID,
+			Selected:   answer.Selected,
+		})
+
+		if err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid user ID"})
+			return
+		}
+	}
+
+	err := l.questionnaireService.SubmitAnswers(c, userAnswersData)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to submit answers"})
 		return
 	}
 
 	// UPDATE SCORE
-	
+
 	var score models.Score
 	score.Score = totalScore
 	userID, err := primitive.ObjectIDFromHex(answersReq.UserID)

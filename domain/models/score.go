@@ -4,7 +4,7 @@ import "go.mongodb.org/mongo-driver/bson/primitive"
 
 type Option struct {
 	Text  string  `bson:"text" json:"text"`
-	Value float32 `bson:"value" json:"value"`
+	Score float32 `bson:"score" json:"score"`
 }
 
 type Question struct {

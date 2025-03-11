@@ -41,11 +41,11 @@ const (
 
 type UserData struct {
 	ID            primitive.ObjectID     `bson:"_id,omitempty"`
-	GeneratedData GeneratedData          `bson:"generatedData" validate:"required"`
+	GeneratedData GeneratedData          `bson:"generatedData"`
 	CreatedAt     time.Time              `bson:"createdAt"`
 	LastActiveAt  time.Time              `bson:"lastActiveAt"`
 	AccountStatus AccountStatus          `bson:"accountStatus" validate:"oneof=active banned"`
-	RealData      RealData               `bson:"realData" validate:"required"`
+	RealData      RealData               `bson:"realData"`
 	TestTaken     bool                   `bson:"testTaken"`
 	ScoreID       primitive.ObjectID     `bson:"scoreID,omitempty"` // Reference to Score
 	Preferences   map[string]interface{} `bson:"preferences"`

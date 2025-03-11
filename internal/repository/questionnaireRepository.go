@@ -6,6 +6,7 @@ import (
 	"github.com/Seew0/Heal-D/domain/models"
 	"github.com/Seew0/Heal-D/internal/db"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 type QuestionnaireRepository struct {
@@ -33,20 +34,27 @@ func (r *QuestionnaireRepository) GetQuestions(ctx context.Context) ([]models.Qu
 
 func (r *QuestionnaireRepository) GetQuestionByID(ctx context.Context, id string) (*models.Question, error) {
 	var question models.Question
-	if err := r.db.QuestionsCol.FindOne(ctx, bson.M{"_id": id}).Decode(&question); err != nil {
+	questionID, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		return nil, err
+	}
+
+	if err := r.db.QuestionsCol.FindOne(ctx, bson.M{"_id": questionID}).Decode(&question); err != nil {
 		return nil, err
 	}
 
 	return &question, nil
 }
 
-func (r *QuestionnaireRepository) CreateScore(ctx context.Context, score models.Score) (string , error) {
-	scoreID , err := r.db.ScoreUserCol.InsertOne(ctx, score)
+func (r *QuestionnaireRepository) CreateScore(ctx context.Context, score models.Score) (string, error) {
+	scoreID, err := r.db.ScoreUserCol.InsertOne(ctx, score)
 	if err != nil {
-		return "" , err
+		return "", err
 	}
 
-	return scoreID.InsertedID.(string), nil
+	scoreIDString := scoreID.InsertedID.(primitive.ObjectID).Hex()
+
+	return scoreIDString, nil
 }
 
 func (r *QuestionnaireRepository) SubmitAnswers(ctx context.Context, answers []models.UserAnswer) error {
@@ -67,7 +75,12 @@ func (r *QuestionnaireRepository) UpdateTestStatus(ctx context.Context, id strin
 			"scoreID":   scoreID,
 		},
 	}
-	_, err := r.db.UserDataCol.UpdateByID(ctx, id, updatePayload)
+
+	userID, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		return err
+	}
+	_, err = r.db.UserDataCol.UpdateByID(ctx, userID, updatePayload)
 	if err != nil {
 		return err
 	}

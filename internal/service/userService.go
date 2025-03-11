@@ -26,3 +26,7 @@ func (s *UserService) GetAllUsers(ctx context.Context) ([]models.UserData, error
 func (s *UserService) GetUserByID(ctx context.Context, id string) (*models.UserData, error) {
 	return s.userRepo.FindUserByID(ctx, id)
 }
+
+func (s *UserService) GetUserScore(ctx context.Context, id string) (*models.Score, error) {
+	return s.userRepo.GetUserScore(ctx, id)
+}

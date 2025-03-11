@@ -7,6 +7,7 @@ import (
 	"github.com/Seew0/Heal-D/internal/db"
 
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 type UserRepository struct {
@@ -43,9 +44,26 @@ func (r *UserRepository) FindAllUsers(ctx context.Context) ([]models.UserData, e
 
 func (r *UserRepository) FindUserByID(ctx context.Context, id string) (*models.UserData, error) {
 	var user models.UserData
-	if err := r.db.UserDataCol.FindOne(ctx, bson.M{"_id": id}).Decode(&user); err != nil {
+	mongoID, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		return nil, err
+	}
+	if err := r.db.UserDataCol.FindOne(ctx, bson.M{"_id": mongoID}).Decode(&user); err != nil {
 		return nil, err
 	}
 
 	return &user, nil
+}
+
+func (r *UserRepository) GetUserScore(ctx context.Context, id string) (*models.Score, error) {
+	var score models.Score
+	mongoID, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		return nil, err
+	}
+	if err := r.db.ScoreUserCol.FindOne(ctx, bson.M{"userID": mongoID}).Decode(&score); err != nil {
+		return nil, err
+	}
+
+	return &score, nil
 }

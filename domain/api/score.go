@@ -1,4 +1,4 @@
-package requests
+package api
 
 import "github.com/Seew0/Heal-D/domain/models"
 
