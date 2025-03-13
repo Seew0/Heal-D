@@ -1,0 +1,15 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+	html {
+		scroll-behavior: smooth;
+	}
+
+	body {
+		/* font-family: 'Overlock', cursive; */
+		font-family: 'Kulim Park', sans-serif;
+		@apply bg-primary;
+	}
+}

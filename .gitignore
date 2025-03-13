@@ -3,3 +3,4 @@ ProjectStruct.md
 docker-compose.yaml
 seeder.go
 ME.json
+frontend/node_modules
