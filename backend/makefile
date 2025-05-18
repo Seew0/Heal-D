@@ -34,3 +34,8 @@ clean:
 test:
 	@echo "Running tests..."
 	go test ./...
+
+seed:
+	@echo "Seeding the database..."
+	go run seeder.go
+	@echo "Database seeded successfully."

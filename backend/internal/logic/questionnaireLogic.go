@@ -25,13 +25,24 @@ func (l *QuestionnaireLogic) GetQuestions(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to fetch questions"})
 		return
 	}
-	c.JSON(http.StatusOK, gin.H{"questions": questions})
+	c.JSON(http.StatusOK, gin.H{"data": questions})
 }
 
 func (l *QuestionnaireLogic) SubmitAnswers(c *gin.Context) {
 	var answersReq requests.SubmitAnswersRequest
 	if err := c.BindJSON(&answersReq); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request"})
+		return
+	}
+	// Validate user ID 
+	testStatus,err := l.questionnaireService.GetTestStatus(c, answersReq.UserID)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to fetch test status"})
+		return
+	}
+
+	if testStatus {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Test already taken"})
 		return
 	}
 
@@ -41,40 +52,23 @@ func (l *QuestionnaireLogic) SubmitAnswers(c *gin.Context) {
 	// Calculate total score
 	var totalScore float32
 	for _, answer := range answers {
-		fmt.Println(answer.QuestionID.Hex())
-		question, err := l.questionnaireService.GetQuestionByID(c, answer.QuestionID.Hex())
+		question, err := l.questionnaireService.GetQuestionByID(c, answer.ID)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to fetch question"})
 			return
 		}
-		answer.UserID, err = primitive.ObjectIDFromHex(answersReq.UserID)
-		if err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid user ID"})
-			return
-		}
-		totalScore += question.Options[answer.Selected-1].Score
+		totalScore += question.Options[answer.SelectedAnswer-1].Score
 	}
 
-	totalScore = totalScore/10
+	totalScore = totalScore / 10
 	fmt.Println("Total Score: ", totalScore)
 	// Updating answers in DB
-	var userAnswersData []models.UserAnswer
-	for _, answer := range answers {
-		answerUserID, err := primitive.ObjectIDFromHex(answersReq.UserID)
+	var userAnswersData models.UserAnswer
 
-		userAnswersData = append(userAnswersData, models.UserAnswer{
-			UserID:     answerUserID,
-			QuestionID: answer.QuestionID,
-			Selected:   answer.Selected,
-		})
+	userAnswersData.UserID = answersReq.UserID
+	userAnswersData.Answers = answers
 
-		if err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid user ID"})
-			return
-		}
-	}
-
-	err := l.questionnaireService.SubmitAnswers(c, userAnswersData)
+	err = l.questionnaireService.SubmitAnswers(c, userAnswersData)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to submit answers"})
 		return
@@ -90,7 +84,7 @@ func (l *QuestionnaireLogic) SubmitAnswers(c *gin.Context) {
 		return
 	}
 
-	score.UserID = userID
+	score.UserID = answersReq.UserID
 
 	var scoreID string
 	scoreID, err = l.questionnaireService.CreateScore(c, score)

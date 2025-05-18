@@ -30,3 +30,8 @@ func (s *UserService) GetUserByID(ctx context.Context, id string) (*models.UserD
 func (s *UserService) GetUserScore(ctx context.Context, id string) (*models.Score, error) {
 	return s.userRepo.GetUserScore(ctx, id)
 }
+
+
+func (s *UserService) LastActiveAt(ctx context.Context, id string) (string, error) {
+	return s.userRepo.LastActiveAt(ctx, id)
+}

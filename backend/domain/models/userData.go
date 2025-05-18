@@ -29,7 +29,6 @@ type GeneratedData struct {
 	GenedName     string             `bson:"genedName" validate:"required,min=3,max=50"`
 	Age           int                `bson:"age" validate:"required,min=1,max=100"`
 	GenedPassword string             `bson:"genedPassword" validate:"required,min=3,max=50"`
-	GenedLocation string             `bson:"genedLocation" validate:"required,min=3,max=50"`
 }
 
 type AccountStatus string
@@ -47,6 +46,5 @@ type UserData struct {
 	AccountStatus AccountStatus          `bson:"accountStatus" validate:"oneof=active banned"`
 	RealData      RealData               `bson:"realData"`
 	TestTaken     bool                   `bson:"testTaken"`
-	ScoreID       primitive.ObjectID     `bson:"scoreID,omitempty"` // Reference to Score
-	Preferences   map[string]interface{} `bson:"preferences"`
+	ScoreID       string     `bson:"scoreID,omitempty"` // Reference to Score
 }

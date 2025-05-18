@@ -18,7 +18,6 @@ func GenerateDataEntries() models.GeneratedData {
 		GenedName:     gofakeit.Name(),
 		Age:           rand.Intn(100) + 1,
 		GenedPassword: gofakeit.Password(true, true, true, true, false, 10),
-		GenedLocation: gofakeit.City(),
 	}
 
 	return data

@@ -67,3 +67,18 @@ func (r *UserRepository) GetUserScore(ctx context.Context, id string) (*models.S
 
 	return &score, nil
 }
+
+
+
+func (r *UserRepository) LastActiveAt(ctx context.Context, id string) (string, error) {
+	var user models.UserData
+	mongoID, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		return "", err
+	}
+	if err := r.db.UserDataCol.FindOne(ctx, bson.M{"_id": mongoID}).Decode(&user); err != nil {
+		return "", err
+	}
+
+	return user.LastActiveAt.GoString(), nil
+}
